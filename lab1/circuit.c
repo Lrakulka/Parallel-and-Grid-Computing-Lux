@@ -1,8 +1,3 @@
-/**
-* Author Oleksandr Borysov
-* Lab Assignment MPI
-* 11/1/2016
-*/
 #include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
