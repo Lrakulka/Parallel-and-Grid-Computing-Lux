@@ -3,7 +3,6 @@
 * Lab Assignment MPI
 * 11/1/2016
 */
-#include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -44,7 +43,7 @@ int main(int argc, char *argv[]) {
     for (unsigned register int input = 0; input < INPUT_POSSIBILITIES; input++) {
        if (check_circuit(input)) {
          result = int_to_binary(input);
-         printf("Found solution '%s'\n", result);
+         printf("Found solution '0x%x' = '%s'\n", input, result);
          free(result);
 	 solution++;
        }
