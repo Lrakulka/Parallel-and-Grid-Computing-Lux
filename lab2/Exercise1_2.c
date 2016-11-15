@@ -7,12 +7,11 @@
 #include <math.h>
 #include <stdio.h>
 
-const double PI = 3.141592653589793238462643;  // 25 elements of PI
 
 int main(int argc, char *argv[])
 {
     int n, numprocs;
-    double mypi, h, sum, x;
+    double mypi, h, sum, x, apx;
     printf("Enter the number of intervals: ");
     scanf("%d",&n);
     h = 1.0 / n;
@@ -22,6 +21,7 @@ int main(int argc, char *argv[])
        sum += 4.0 / (1.0 + x * x);
     }
     mypi = h * sum;
-    printf("Calculated pi %.16f\n Error of calculated pi is %.16f\n", mypi, fabs(mypi - PI));
+    apx = 2 / (3. * n * n);
+    printf("Calculated pi %.16f\n The approximation of error is %.16f\n", mypi, apx);
     return 0;
 }

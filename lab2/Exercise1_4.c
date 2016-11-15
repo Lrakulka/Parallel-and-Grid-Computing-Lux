@@ -10,7 +10,6 @@
 #include <stdarg.h>
 
 int myid; // Id of the process
-const double PI = 3.141592653589793238462643;  // 25 elements of PI
 
 /**
  * Redefinition of the printf to include the buffer flushing
@@ -27,7 +26,7 @@ void xprintf(char *format, ...) {
 int main(int argc, char *argv[])
 {
     int n, numprocs;
-    double mypi, pi, h, sum, x;
+    double mypi, pi, h, sum, x, apx;
     double minTime, maxTime, avrTime;
     double elapse_time = 0;
 
@@ -63,8 +62,8 @@ int main(int argc, char *argv[])
        dataPlotFile = fopen("plotDataExc1_4.txt", "a");
        fprintf(dataPlotFile, "%d %f %f %f\n", numprocs, maxTime, avrTime, minTime);
        fclose(dataPlotFile);
-
-       xprintf("Calculated pi %.16f\n Error of calculated pi is %.16f\n", pi, fabs(pi - PI));
+       apx = 2 / (3. * n * n);
+       xprintf("Calculated pi %.16f\n The approximation of error is %.16f\n", pi, apx);
     }
     MPI_Finalize();
     return 0;

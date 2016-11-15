@@ -6,7 +6,7 @@
 
 #include <stdio.h>     /* for printf */
 #include <stdlib.h>    /* for exit  */
-#include <stdarg.h>    /* for va_{list,args... */
+#include <stdarg.h>    
 #include <mpi.h>
 #include <math.h>
 #include <time.h>
@@ -31,22 +31,29 @@ int main(int argc, char ** argv) {
 	int p;
 	double elapsed_time = 0.0;
 	double my_pi;
-	double e = 0.001;
+	double e;
 	double points[N_INTERVAL];
 
 	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &p);
 	MPI_Comm_rank(MPI_COMM_WORLD, &id);
 
-	if ( p < 2 ) {
-		xprintf("Please enter at least 2 processes");
-		return;
+	if (p < 2) {
+	   xprintf("Please enter at least 2 processes");
+	return 1;
 	}
+
+	if (id == 0) {
+          xprintf("Enter the accuracy: ");
+          scanf("%lf",&e);
+    	}
+  	MPI_Bcast(&e, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
 	// GROUPS
 	MPI_Group world_group;
 	MPI_Group workers;
 	MPI_Comm_group(MPI_COMM_WORLD, &world_group);
+	MPI_Barrier(MPI_COMM_WORLD);
 
 	int ranks[1] = { p - 1 };
 	MPI_Group_excl(world_group, 1, ranks, &workers);

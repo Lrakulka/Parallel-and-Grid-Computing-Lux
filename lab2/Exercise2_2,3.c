@@ -10,7 +10,6 @@
 #include <stdarg.h>
 
 int myid; // Id of the process
-const double PI = 3.141592653589793238462643;  // 25 elements of PI
 
 double integrate_f(double);          /* Integral function */
 double simpson(int, double, double, double, int);
@@ -30,7 +29,7 @@ int main(int argc, char *argv[]) {
   int numprocs, n;
   double pi, y, processor_output_share[32], x1, x2, l, sum;
   MPI_Status status;
-  double minTime, maxTime, avrTime;
+  double minTime, maxTime, avrTime, apx;
   double elapse_time = 0;
 
   MPI_Init(&argc, &argv);
@@ -71,7 +70,8 @@ int main(int argc, char *argv[]) {
 
   if (myid == 0) {
     pi *= 2.0 * l/ 3.0;
-    xprintf("Calculated pi %.16f\n Error of calculated pi is %.16f\n", pi, fabs(pi - PI));
+    apx = 96 / (180. * n * n * n * n);
+    printf("Calculated pi %.16f\n The approximation of error is %.16f\n", pi, apx);
 
     avrTime /= numprocs;
     xprintf("done! \n Found max process time %f\n Found avr process time %f\n Found min process time %f\n", maxTime, avrTime, minTime);

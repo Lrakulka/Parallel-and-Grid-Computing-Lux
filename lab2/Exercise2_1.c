@@ -7,14 +7,12 @@
 #include <math.h>
 #include <stdio.h>
 
-const double PI = 3.141592653589793238462643;  // 25 elements of PI
-
 double integrate_f(double);          /* Integral function */
 double simpson(int, double, double, double, int);
 
 int main(int argc, char *argv[]) {
   int n;                   
-  double total; 
+  double total, apx; 
   double pi, y, x1, x2, l, sum;
   
   printf("Enter the number of intervals: ");
@@ -34,7 +32,8 @@ int main(int argc, char *argv[]) {
 
   sum += (integrate_f(x1) + integrate_f(x2)) / 2.0;
   pi = sum * 2.0 * l/ 3.0;
-  printf("Calculated pi %.16f\n Error of calculated pi is %.16f\n", pi, fabs(pi - PI));
+  apx = 96 / (180. * n * n * n * n);
+  printf("Calculated pi %.16f\n The approximation of error is %.16f\n", pi, apx);
   return 0;
 }
  

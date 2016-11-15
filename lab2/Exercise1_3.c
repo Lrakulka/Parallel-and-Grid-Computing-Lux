@@ -10,7 +10,6 @@
 #include <stdarg.h>
 
 int myid; // Id of the process
-const double PI = 3.141592653589793238462643;  // 25 elements of PI
 
 /**
  * Redefinition of the printf to include the buffer flushing
@@ -27,7 +26,7 @@ void xprintf(char *format, ...) {
 int main(int argc, char *argv[])
 {
     int n, numprocs;
-    double mypi, pi, h, sum, x;
+    double mypi, pi, h, sum, x, apx;
 
     MPI_Init(&argc,&argv);
     MPI_Comm_size(MPI_COMM_WORLD,&numprocs);
@@ -49,12 +48,12 @@ int main(int argc, char *argv[])
     MPI_Reduce(&mypi, &pi, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
     if (myid == 0) {
+       apx = 2 / (3. * n * n);
        FILE* dataPlotFile;
        dataPlotFile = fopen("plotDataExc1_3.txt", "a");
-       fprintf(dataPlotFile, "%d %f \n", numprocs, fabs(pi - PI));
+       fprintf(dataPlotFile, "%d %f \n", numprocs, apx);
        fclose(dataPlotFile);
-
-       xprintf("Calculated pi %.16f\n Error of calculated pi is %.16f\n", pi, fabs(pi - PI));
+       xprintf("Calculated pi %.16f\n The approximation of error is %.16f\n", pi, apx);
     }
     MPI_Finalize();
     return 0;

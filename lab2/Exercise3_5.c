@@ -6,7 +6,7 @@
 
 #include <stdio.h>     /* for printf */
 #include <stdlib.h>    /* for exit  */
-#include <stdarg.h>    /* for va_{list,args... */
+#include <stdarg.h>    
 #include <mpi.h>
 #include <math.h>
 #include <time.h>
@@ -31,9 +31,9 @@ int main(int argc, char ** argv) {
 	int p;
 	double elapsed_time = 0.0;
 	double my_pi;
-	double e = 0.001;
+	double e;
 	double points[N_INTERVAL];
-	double min_time, max_time, avg_time;
+	double minTime, maxTime, avrTime;
 
 	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &p);
@@ -41,9 +41,13 @@ int main(int argc, char ** argv) {
 
 	if (p < 2) {
 		xprintf("Please enter at least 2 processes");
-		return;
+		return 0;
 	}
-
+	if (id == 0) {
+          xprintf("Enter the accuracy: ");
+          scanf("%lf",&e);
+    	}
+  	MPI_Bcast(&e, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 	MPI_Barrier(MPI_COMM_WORLD);
 	elapsed_time = -MPI_Wtime();
 
@@ -97,28 +101,23 @@ int main(int argc, char ** argv) {
 
 		if (id == 0) {
 			my_pi = 4.0f * (double)p_in / (double)(p_out + p_in);
-			printf("Calculated PI = %.17f, Error is %.17f\n", my_pi, fabs(my_pi - PI));
+			xprintf("Calculated PI = %.17f, Error is %.17f\n", my_pi, fabs(my_pi - PI));
 		}
 
 	}
 
 	// at the end, compute elapsed time
 	elapsed_time += MPI_Wtime();
-	MPI_Reduce(&elapsed_time, &min_time, 1, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
-	MPI_Reduce(&elapsed_time, &max_time, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-	MPI_Reduce(&elapsed_time, &avg_time, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+	MPI_Reduce(&elapsed_time, &minTime, 1, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
+	MPI_Reduce(&elapsed_time, &maxTime, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+	MPI_Reduce(&elapsed_time, &avrTime, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
 	if (id == 0) {
-		FILE *fp;
-
-		avg_time /= p;
-		xprintf("Elapsed time MAX: %f s\n", max_time);
-		xprintf("Elapsed time MIN: %f s\n", min_time);
-		xprintf("Elapsed time AVG: %f s\n", avg_time);
-
-		fp = fopen("data_monte.txt", "a");
-		fprintf(fp, "%d %f %f %f\n", p, max_time, min_time, avg_time);
-		fclose(fp);
+		avrTime /= p;
+		FILE* dataPlotFile;
+    		dataPlotFile = fopen("plotDataExc3_5.txt", "a");
+	    	fprintf(dataPlotFile, "%d %f %f %f\n", p, maxTime, avrTime, minTime);
+	    	fclose(dataPlotFile);
 	}
 
 	MPI_Finalize();
