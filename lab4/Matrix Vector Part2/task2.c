@@ -10,6 +10,8 @@
 #define TYPE double
 #define MPI_DATA_TYPE MPI_DOUBLE
 
+#define TIME_FILE "plotDataExc3_5.txt"
+
 #define BLOCK_LOW(id,p,k) ((id)*(k)/(p))
 #define BLOCK_HIGH(id,p,k) (BLOCK_LOW((id)+1,p,k)-1)
 #define BLOCK_SIZE(id,p,k) (BLOCK_HIGH(id,p,k)-BLOCK_LOW(id,p,k)+1)
@@ -44,6 +46,15 @@ void print_row_matrix(void **M, MPI_Datatype type, size_t m, size_t n, MPI_Comm 
 
 int main(int argc, char* argv[]) {
    srand(SRAND);
+   double minTime, maxTime, avrTime, elapsed_time = 0.0;
+   int p, id;
+   MPI_Init(&argc, &argv);
+   MPI_Comm_size(MPI_COMM_WORLD, &p);
+   MPI_Comm_rank(MPI_COMM_WORLD, &id); 
+
+   MPI_Barrier(MPI_COMM_WORLD);
+   elapsed_time = -MPI_Wtime();
+
    char *p1 = "base_i_vector_n.dat";
    char *p2 = "random_vector_n.dat";
    char *p3 = "id_matrix_m_n.dat";
@@ -98,6 +109,20 @@ int main(int argc, char* argv[]) {
    vector_free(v3);
    matrix_free(matr2, m);
    matrix_free(matr1, m);
+
+   elapsed_time += MPI_Wtime();
+   MPI_Reduce(&elapsed_time, &minTime, 1, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
+   MPI_Reduce(&elapsed_time, &maxTime, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+   MPI_Reduce(&elapsed_time, &avrTime, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+
+   if (id == 0) {
+     avrTime /= p;
+     FILE* dataPlotFile;
+     dataPlotFile = fopen(TIME_FILE, "a");
+     fprintf(dataPlotFile, "%d %f %f %f\n", p, maxTime, avrTime, minTime);
+     fclose(dataPlotFile);
+   }
+
    MPI_Finalize();
    return 0;
 }
@@ -106,7 +131,8 @@ void read_row_matrix(char *f, MPI_Datatype dtype, size_t *m, size_t *n, void ***
     int p, id, size, typeSize;
     MPI_Status st;
     
-    MPI_Type_size(dtype, typeSize);
+    
+MPI_Type_size(dtype, &typeSize);
     MPI_Comm_size(comm, &p); 
     MPI_Comm_rank(comm, &id); 
 
@@ -135,7 +161,7 @@ void read_vector_and_replicate(char *f, MPI_Datatype dtype, size_t *n, void **v,
     int p, id, typeSize;
     MPI_Status st;
     
-    MPI_Type_size(dtype, typeSize);
+    MPI_Type_size(dtype, &typeSize);
     MPI_Comm_size(comm, &p); 
     MPI_Comm_rank(comm, &id); 
 
@@ -216,7 +242,7 @@ void vector_free (void *v) {
 }
 
 void **matrix_alloc(size_t m, size_t n, size_t size ) {
-    void **matr = calloc(m, sizeof(void*));
+    void **matr = (void**) calloc(m, sizeof(void*));
     for (int i = 0; i < m; i++) {
 	matr[i] = vector_alloc(n, size);
     }
@@ -240,7 +266,7 @@ void read_vector(char *f, size_t size, size_t *n, void **v)  {
 }
 
 void print_vector_lf (void *v, MPI_Datatype type, size_t n) {
-   for (int i = 0; i < (int) n; ++i) {
+   for (int i = 0; i < n; ++i) {
       if (type == MPI_INT)
 	printf("%d ", ((int *) v)[i]);
       if (type == MPI_DOUBLE)
@@ -274,15 +300,15 @@ void store_matrix(char *f, size_t m, size_t n, size_t size, void **M) {
    file = fopen(f, "w");
    fread(&m, sizeof(int), 1, file);
    fread(&n, sizeof(int), 1, file);
-   for (int i = 0; i < (int) m; ++i) {
+   for (int i = 0; i < m; ++i) {
        fwrite(M[i], size * n, 1, file);
    }
    fclose(file);
 }
 
 void print_matrix_lf (void **M, MPI_Datatype type, size_t m, size_t n) {
-   for (int j = 0; j < (int) m; ++j) {
-     for (int i = 0; i < (int) n; ++i) {
+   for (int j = 0; j < m; ++j) {
+     for (int i = 0; i < n; ++i) {
        if (type == MPI_INT)
            printf("%d ", ((int**) M)[j][i]);
        if (type == MPI_DOUBLE)
