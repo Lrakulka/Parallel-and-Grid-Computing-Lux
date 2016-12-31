@@ -98,6 +98,7 @@ int main(int argc, char* argv[]) {
    vector_free(v3);
    matrix_free(matr2, m);
    matrix_free(matr1, m);
+   MPI_Finalize();
    return 0;
 }
 
@@ -217,7 +218,7 @@ void vector_free (void *v) {
 void **matrix_alloc(size_t m, size_t n, size_t size ) {
     void **matr = calloc(m, sizeof(void*));
     for (int i = 0; i < m; i++) {
-	matr[i] = calloc(n, size);
+	matr[i] = vector_alloc(n, size);
     }
     return matr;	 
 }
@@ -233,13 +234,20 @@ void read_vector(char *f, size_t size, size_t *n, void **v)  {
    FILE *file;
    file = fopen(f, "r");
    fread(n, sizeof(int), 1, file);
-   *v = vector_alloc(*n, size);
-   printf("sef %d", *n);
-   fflush(stdout);
+   *v = vector_alloc(*n, sizeof(TYPE));
    fread(*v, size * *n, 1, file);
-   printf("sef %d", *n);
-   fflush(stdout);
    fclose(file);
+}
+
+void print_vector_lf (void *v, MPI_Datatype type, size_t n) {
+   for (int i = 0; i < (int) n; ++i) {
+      if (type == MPI_INT)
+	printf("%d ", ((int *) v)[i]);
+      if (type == MPI_DOUBLE)
+	printf("%0.2f ", ((double *) v)[i]);
+      if (type == MPI_CHAR)
+	printf("%c ", ((char *) v)[i]);
+   }
 }
 
 void read_matrix(char *f, size_t size, size_t *m, size_t *n, void ***M) {	
@@ -248,7 +256,7 @@ void read_matrix(char *f, size_t size, size_t *m, size_t *n, void ***M) {
    fread(m, sizeof(int), 1, file);
    fread(n, sizeof(int), 1, file);
    *M = matrix_alloc(*m, *n, size);
-   for (int i = 0; i < *m; ++i) {
+   for (int i = 0; i < (int) *m; ++i) {
        fread((*M)[i], size * *n, 1, file);
    }
 }
@@ -266,26 +274,15 @@ void store_matrix(char *f, size_t m, size_t n, size_t size, void **M) {
    file = fopen(f, "w");
    fread(&m, sizeof(int), 1, file);
    fread(&n, sizeof(int), 1, file);
-   for (int i = 0; i < m; ++i) {
+   for (int i = 0; i < (int) m; ++i) {
        fwrite(M[i], size * n, 1, file);
    }
    fclose(file);
 }
 
-void print_vector_lf (void *v, MPI_Datatype type, size_t n) {
-   for (int i = 0; i < n; ++i) {
-	  if (type == MPI_INT)
-	     printf("%d ", ((int *) v)[i]);
-	  if (type == MPI_DOUBLE)
-	     printf("%0.2f ", ((double *) v)[i]);
-	  if (type == MPI_CHAR)
-	     printf("%c ", ((char *) v)[i]);
-   }
-}
-
 void print_matrix_lf (void **M, MPI_Datatype type, size_t m, size_t n) {
-   for (int j = 0; j < m; ++j) {
-     for (int i = 0; i < n; ++i) {
+   for (int j = 0; j < (int) m; ++j) {
+     for (int i = 0; i < (int) n; ++i) {
        if (type == MPI_INT)
            printf("%d ", ((int**) M)[j][i]);
        if (type == MPI_DOUBLE)
