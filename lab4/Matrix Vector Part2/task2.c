@@ -75,12 +75,10 @@ int main(int argc, char* argv[]) {
   printf("\n");
   fflush(stdout); 
 
-  /* printf("\nProc id=%d \n", id);
-   print_matrix_lf(matr, MPI_DATA_TYPE, m, n);
-   fflush(stdout); */
-   //read_vector_and_replicate(p1, MPI_DATA_TYPE, &n, &v, comm);
-   //print_vector_lf(v, MPI_DATA_TYPE, n);   
-   //fflush(stdout);
+  read_vector_and_replicate(p1, MPI_DATA_TYPE, &n, &v, comm);
+  print_vector_lf(v, MPI_DATA_TYPE, n); 
+  printf("\n");
+  fflush(stdout); 
 /*
    vector_free(v);
    vector_free(vResult);
