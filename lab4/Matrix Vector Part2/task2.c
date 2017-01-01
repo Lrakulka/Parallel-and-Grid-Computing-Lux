@@ -66,9 +66,9 @@ int main(int argc, char* argv[]) {
    TYPE** matr;
    
    read_row_matrix(p2, MPI_DATA_TYPE, &m, &n, &matr, comm);
-   printf("\nProc id=%d \n", id);
+  /* printf("\nProc id=%d \n", id);
    print_matrix_lf(matr, MPI_DATA_TYPE, m, n);
-   fflush(stdout);
+   fflush(stdout); */
    //read_vector_and_replicate(p1, MPI_DATA_TYPE, &n, &v, comm);
    //print_vector_lf(v, MPI_DATA_TYPE, n);   
    //fflush(stdout);
@@ -102,10 +102,18 @@ void read_row_matrix(char *f, MPI_Datatype dtype, size_t *m, size_t *n, void ***
     MPI_Comm_rank(comm, &id); 
 
     void **matr;
+    void ***matr1;
     if (id == 0) {
-       read_matrix(f, typeSize, m, n, &matr);
+       read_matrix(f, typeSize, m, n, matr1);
     }
-    
+    matr = *matr1;
+printf("m=%d n=%f\n", matr1, ***(double***)matr1);
+   fflush(stdout);
+    print_matrix_lf(matr, MPI_DATA_TYPE, *m, *n);
+
+printf("first\n");
+   fflush(stdout);
+    /*
     MPI_Bcast(m, 1, MPI_INT, 0, comm);
     MPI_Bcast(n, 1, MPI_INT, 0, comm);
 	
@@ -121,14 +129,10 @@ void read_row_matrix(char *f, MPI_Datatype dtype, size_t *m, size_t *n, void ***
         }
 	memcpy(*M, matr[BLOCK_LOW(id, p, *m)], size);
 
-  /* print_matrix_lf(*M, MPI_DATA_TYPE, rowSize, *n);
-printf("size=%d", rowSize);
-   fflush(stdout);*/
-
 	matrix_free(matr, *m);
     } else {
         MPI_Recv(**M, size, dtype, 0, 0, comm, &st);
-    }
+    }*/
 }
 
 void read_vector_and_replicate(char *f, MPI_Datatype dtype, size_t *n, void **v, MPI_Comm comm) {
@@ -216,8 +220,9 @@ void vector_free (void *v) {
 }
 
 void **matrix_alloc(size_t m, size_t n, size_t size ) {
-    void *matr = calloc(m * n ,size);
-    return &matr;	 
+    void *matr = calloc(m * n, size);
+    void **matr1 = &matr;
+    return matr1;	 
 }
 
 void matrix_free (void **M, size_t m) {
@@ -260,19 +265,19 @@ void read_matrix(char *f, size_t size, size_t *m, size_t *n, void ***M) {
    file = fopen(f, "r");   
    fread(m, sizeof(size_t), 1, file);
    fread(n, sizeof(size_t), 1, file);
-   *M = matrix_alloc(*m, *n, size);
-printf("first 2_  %d\n", *M);
-print_matrix_lf(*M, MPI_DATA_TYPE, *m, *n);
-printf("second\n");
-   fflush(stdout);
+
+   // It's looks stupid but on my machine it's the only way for compiler to compile correctly
+   void **v = matrix_alloc(*m, *n, size);
+   /*void *v1 = calloc(*m * *n, size);
+   void **v = &v1;*/
+   M = &v;
+
    fread(**M, size * *n * *m, 1, file);
- 
-print_matrix_lf(*M, MPI_DATA_TYPE, *m, *n);
-   fflush(stdout);
-/*
-   for (int i = 0; i < *m; ++i) {
-       fread((*M)[i], size * *n, 1, file);
-   } */
+
+
+    print_matrix_lf(*M, MPI_DATA_TYPE, *m, *n);
+
+printf("first\n");
    fclose(file);
 }
 
@@ -288,11 +293,6 @@ void store_matrix(char *f, size_t m, size_t n, size_t size, void **M) {
 }
  
 void print_matrix_lf (void **M, MPI_Datatype type, size_t m, size_t n) {
-/*double *m1 = *((double**) M);
-    m1[1] = 3.2;
-    printf("%f", m1[1]);
- fflush(stdout);*/
-
    for (int i = 0; i < m; ++i) {
      for (int j = 0; j < n; ++j) {
        if (type == MPI_INT)
