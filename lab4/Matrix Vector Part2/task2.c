@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_PRINT 30
 #define SRAND 32425
 #define TYPE double
 #define MPI_DATA_TYPE MPI_DOUBLE
@@ -66,20 +67,20 @@ int main(int argc, char* argv[]) {
    char *p2 = "random_matrix_m_n.dat";
    char *plotDataFile = "plotData.txt";
 
-   /*
+   
    // Generate new random matrix and vector
-   TYPE* v2 = (TYPE*) random_vector_n(100);
-   TYPE** matr2 = (TYPE**) random_matrix_m_n(100, 100);
-   store_vector(p1, 100, sizeof(TYPE), v2);
-   store_matrix(p2, 100, 100, sizeof(TYPE), matr2);
-   */
+   /*TYPE* v2 = (TYPE*) random_vector_n(10000);
+   TYPE** matr2 = (TYPE**) random_matrix_m_n(10000, 10000);
+   store_vector(p1, 10000, sizeof(TYPE), v2);
+   store_matrix(p2, 10000, 10000, sizeof(TYPE), matr2);*/
+   
 
    int m, n, nv;
    void* v, *vResult;
    void** matr;
-   
-   read_row_matrix(p2, MPI_DATA_TYPE, &m, &n, &matr, comm);  
+
    read_vector_and_replicate(p1, MPI_DATA_TYPE, &nv, &v, comm);
+   read_row_matrix(p2, MPI_DATA_TYPE, &m, &n, &matr, comm); 
 
    int rowsNumber = BLOCK_SIZE(id, p, nv);
    if (n != nv) {
@@ -88,7 +89,6 @@ int main(int argc, char* argv[]) {
      return 0;
    }
    vResult = callc_result_part(matr, v, m, n, MPI_DATA_TYPE, comm);
-
    print_row_matrix(matr, MPI_DATA_TYPE, m, n, comm);
    if (id == 0) {
       print_vector_lf(v, MPI_DATA_TYPE, n); 
@@ -150,7 +150,7 @@ void read_row_matrix(char *f, MPI_Datatype dtype, size_t *m, size_t *n, void ***
     MPI_Comm_rank(comm, &id); 
 
     if (id == 0) {
-       read_matrix(f, typeSize, m, n, &matr); 
+       read_matrix(f, typeSize, m, n, &matr);
     }
     // Share m and n with other processes
     MPI_Bcast(m, 1, MPI_INT, 0, comm);
@@ -160,7 +160,7 @@ void read_row_matrix(char *f, MPI_Datatype dtype, size_t *m, size_t *n, void ***
     
     if (id == 0) {
         // Send matrices rows to the processes
-	for (int i = 0; i < p; ++i) {
+	for (int i = 1; i < p; ++i) {
            size = BLOCK_SIZE(i, p, *m) * *n; 
            offset = BLOCK_LOW(i, p, *m);
            MPI_Send(&matr[offset][0], size, dtype, i, 0, comm);
@@ -360,6 +360,11 @@ void read_vector(char *f, size_t size, size_t *n, void **v)  {
 }
 
 void print_vector_lf (void *v, MPI_Datatype type, size_t n) {
+   if (n > MAX_PRINT) {
+      printf("To large output\n");
+      return;
+   }
+
    for (int i = 0; i < n; ++i) {
       if (type == MPI_INT)
 	printf("%d ", ((int *) v)[i]);
@@ -406,6 +411,10 @@ void store_matrix(char *f, size_t m, size_t n, size_t size, void **M) {
 }
  
 void print_matrix_lf (void **M, MPI_Datatype type, size_t m, size_t n) {
+   if (m > MAX_PRINT) {
+      printf("To large output\n");
+      return;
+   }
    for (int i = 0; i < m; ++i) {
      for (int j = 0; j < n; ++j) {
        if (type == MPI_INT)
