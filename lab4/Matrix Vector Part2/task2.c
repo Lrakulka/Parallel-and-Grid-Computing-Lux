@@ -46,6 +46,9 @@ void print_row_vector(void *v, MPI_Datatype type, size_t n, MPI_Comm comm);
 void print_row_matrix(void **M, MPI_Datatype type, size_t m, size_t n, MPI_Comm comm);
 
 void copy_matr_part(void **matr, int low, int hight, int n, int typeSize, void **M);
+void **createBuff(int m, int n, int typeSize);
+void freeBuff(void **buff);
+void* callc_result_part(void **matr, void *v, int m, int n, MPI_Datatype type, MPI_Comm comm);
 
 int main(int argc, char* argv[]) {
    srand(SRAND);
@@ -63,26 +66,41 @@ int main(int argc, char* argv[]) {
    char *p2 = "random_matrix_m_n.dat";
    char *plotDataFile = "plotData.txt";
 
-   int m, n;
+   /*
+   // Generate new random matrix and vector
+   TYPE* v2 = (TYPE*) random_vector_n(100);
+   TYPE** matr2 = (TYPE**) random_matrix_m_n(100, 100);
+   store_vector(p1, 100, sizeof(TYPE), v2);
+   store_matrix(p2, 100, 100, sizeof(TYPE), matr2);
+   */
+
+   int m, n, nv;
    void* v, *vResult;
    void** matr;
    
    read_row_matrix(p2, MPI_DATA_TYPE, &m, &n, &matr, comm);  
-    // allocate matrix
-      int rowsNumber = BLOCK_SIZE(id, p, m);
-  printf("id=%d rows=%d \n", id, rowsNumber);
-  print_matrix_lf(matr, MPI_DATA_TYPE, rowsNumber, n); 
-  printf("\n");
-  fflush(stdout); 
+   read_vector_and_replicate(p1, MPI_DATA_TYPE, &nv, &v, comm);
 
-  read_vector_and_replicate(p1, MPI_DATA_TYPE, &n, &v, comm);
-  print_vector_lf(v, MPI_DATA_TYPE, n); 
-  printf("\n");
-  fflush(stdout); 
-/*
+   int rowsNumber = BLOCK_SIZE(id, p, nv);
+   if (n != nv) {
+     printf("Vector length must be equal to matrix rows number");
+     MPI_Finalize();
+     return 0;
+   }
+   vResult = callc_result_part(matr, v, m, n, MPI_DATA_TYPE, comm);
+
+   print_row_matrix(matr, MPI_DATA_TYPE, m, n, comm);
+   if (id == 0) {
+      print_vector_lf(v, MPI_DATA_TYPE, n); 
+      printf("\n");
+   }
+   print_row_vector(vResult, MPI_DATA_TYPE, m, comm); 
+   fflush(stdout); 
+
+
    vector_free(v);
    vector_free(vResult);
-   matrix_free(matr, m);
+   freeBuff(matr); 
 
    elapsed_time += MPI_Wtime();
    MPI_Reduce(&elapsed_time, &minTime, 1, MPI_DOUBLE, MPI_MIN, 0, comm);
@@ -95,9 +113,31 @@ int main(int argc, char* argv[]) {
      dataPlotFile = fopen(plotDataFile, "a");
      fprintf(dataPlotFile, "%d %f %f %f\n", p, maxTime, avrTime, minTime);
      fclose(dataPlotFile);
-   } */
+   } 
    MPI_Finalize();
    return 0;
+}
+
+void* callc_result_part(void **matr, void *v, int m, int n, MPI_Datatype type, MPI_Comm comm) {
+   int p, id, typeSize, size, offset;
+   void *buff;
+   MPI_Type_size(type, &typeSize);
+   MPI_Comm_size(comm, &p); 
+   MPI_Comm_rank(comm, &id);
+   
+   int elemNumber = BLOCK_SIZE(id, p, m);
+   buff = calloc(elemNumber, typeSize);
+   for (int i = 0; i < elemNumber; ++i) {
+      for (int j = 0; j < n; ++j) {
+         if (type == MPI_INT)
+           ((int *) buff)[i] += ((int *) v)[j] * ((int **) matr)[i][j];
+         if (type == MPI_DOUBLE) 
+           ((double *) buff)[i] += ((double *) v)[j] * ((double **) matr)[i][j];
+         if (type == MPI_CHAR)
+           ((char *) buff)[i] += ((char *) v)[j] * ((char **) matr)[i][j];
+      }
+   }
+   return buff;
 }
 
 void read_row_matrix(char *f, MPI_Datatype dtype, size_t *m, size_t *n, void ***M, MPI_Comm comm) {
@@ -110,33 +150,46 @@ void read_row_matrix(char *f, MPI_Datatype dtype, size_t *m, size_t *n, void ***
     MPI_Comm_rank(comm, &id); 
 
     if (id == 0) {
-       read_matrix(f, typeSize, m, n, &matr);
+       read_matrix(f, typeSize, m, n, &matr); 
     }
-    
+    // Share m and n with other processes
     MPI_Bcast(m, 1, MPI_INT, 0, comm);
     MPI_Bcast(n, 1, MPI_INT, 0, comm);
-
-    void *buff = calloc(*m * *n, typeSize);
-    void **array = calloc(*m, sizeof(void*));
-    for (int i = 0; i < *m; i++) {
-        array[i] = (buff + *n * typeSize * i);
-    }
-    *M = array;
+    // Create buff(monolit block of memory)
+    *M = createBuff(BLOCK_SIZE(id, p, *m), *n, typeSize);
     
     if (id == 0) {
-	for (int i = 1; i < p; ++i) {
+        // Send matrices rows to the processes
+	for (int i = 0; i < p; ++i) {
            size = BLOCK_SIZE(i, p, *m) * *n; 
            offset = BLOCK_LOW(i, p, *m);
            MPI_Send(&matr[offset][0], size, dtype, i, 0, comm);
         }
-        size = (BLOCK_SIZE(id, p, *m) + 1) * *n; 
+        // Get matrices rows for the first process
+        size = BLOCK_SIZE(id, p, *m) * *n; 
         offset = BLOCK_LOW(id, p, *m);
-        memcpy(&(*M)[0], &matr[offset], size); 
-    } else {        
+        memcpy(&(*M)[0][0], &matr[offset][0], typeSize * size); 
+        freeBuff(matr);
+    } else {               
+        // Receive matrices rows
         size = BLOCK_SIZE(id, p, *m) * *n; 
         MPI_Recv(&(*M)[0][0], size, dtype, 0, 0, comm, &st);
     }
-  //matrix_free(matr, *m);
+}
+
+void freeBuff(void **buff) {
+   // buff is a big vector
+   vector_free(buff[0]);  
+   vector_free(buff);
+}
+
+void** createBuff(int m, int n, int typeSize) {
+    void *buff = calloc(m * n, typeSize);
+    void **array = calloc(m, sizeof(void*));
+    for (int i = 0; i < m; i++) {
+        array[i] = (buff + n * typeSize * i);
+    }
+    return array;
 }
 
 void copy_matr_part(void **matr, int low, int hight, int n, int typeSize, void **M) {
@@ -147,7 +200,6 @@ void copy_matr_part(void **matr, int low, int hight, int n, int typeSize, void *
 
 void read_vector_and_replicate(char *f, MPI_Datatype dtype, size_t *n, void **v, MPI_Comm comm) {
     int p, id, typeSize;
-    MPI_Status st;
     
     MPI_Type_size(dtype, &typeSize);
     MPI_Comm_size(comm, &p); 
@@ -158,16 +210,70 @@ void read_vector_and_replicate(char *f, MPI_Datatype dtype, size_t *n, void **v,
     } else {	
        *v = calloc(*n, typeSize);
     }
+    // Share m and n between processes
     MPI_Bcast(n, 1, MPI_INT, 0, comm);
     MPI_Bcast(*v, *n, dtype, 0, comm);
 }
 
 void print_row_vector(void *v, MPI_Datatype type, size_t n, MPI_Comm comm) {
-    
+    int p, id, typeSize, size, offset;
+    MPI_Status st;
+    void *vect;
+    int rowsNumber = BLOCK_SIZE(id, p, n);
+
+    MPI_Type_size(type, &typeSize);
+    MPI_Comm_size(comm, &p); 
+    MPI_Comm_rank(comm, &id); 
+
+    if (id == 0) {
+      vect = calloc(n, typeSize);   
+      // Get vectors elements
+      for (int i = 1; i < p; ++i) {
+         size = BLOCK_SIZE(i, p, n); 
+         offset = BLOCK_LOW(i, p, n);
+         MPI_Recv((vect + offset * typeSize), size, type, i, 2, comm, &st);
+      }      
+      size = BLOCK_SIZE(id, p, n); 
+      offset = BLOCK_LOW(id, p, n);
+      memcpy(&vect[offset], &(v)[0], size * typeSize);
+
+      print_vector_lf(vect, type, n); 
+      printf("\n");
+      free(vect);
+    } else {
+      size = BLOCK_SIZE(id, p, n); 
+      MPI_Send(v, size, type, 0, 2, comm);
+    }
 }
 
 void print_row_matrix(void **M, MPI_Datatype type, size_t m, size_t n, MPI_Comm comm) {
-    
+    int p, id, typeSize, size, offset;
+    MPI_Status st;
+    void **matr;
+    int rowsNumber = BLOCK_SIZE(id, p, m);
+
+    MPI_Type_size(type, &typeSize);
+    MPI_Comm_size(comm, &p); 
+    MPI_Comm_rank(comm, &id); 
+
+    if (id == 0) {
+      matr = createBuff(m, n, typeSize);      
+      // Get matrix's rows for the first process
+      size = (BLOCK_SIZE(id, p, m) ) * n; 
+      offset = BLOCK_LOW(id, p, m);
+      memcpy(&matr[offset][0], &(M)[0][0], size * typeSize); 
+      for (int i = 1; i < p; ++i) {
+         size = BLOCK_SIZE(i, p, m) * n; 
+         offset = BLOCK_LOW(i, p, m);
+         MPI_Recv(&matr[offset][0], size, type, i, 1, comm, &st);
+      }
+      print_matrix_lf(matr, type, m, n); 
+      printf("\n");
+      freeBuff(matr);
+    } else {
+      size = BLOCK_SIZE(id, p, m) * n; 
+      MPI_Send(&M[0][0], size, type, 0, 1, comm);
+    }
 }
 
 void create_count_disp_arrays(int id, int p, size_t k, int **count, int **disp) {
@@ -262,6 +368,7 @@ void print_vector_lf (void *v, MPI_Datatype type, size_t n) {
       if (type == MPI_CHAR)
 	printf("%c ", ((char *) v)[i]);
    }
+   printf("\n");
 }
 
 void store_vector(char *f, size_t n, size_t size, void *v) {
