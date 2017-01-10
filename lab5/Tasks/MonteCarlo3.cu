@@ -41,11 +41,14 @@ int main(int argc, char* argv[]) {
 	clock_t begin = 0;
 	
 	printf("Type number of steps \n");
-	scanf("%d", &stepNumber);
+	scanf("%lu", &stepNumber);  
 	printf("Thread blocks \n");
-	scanf("%d", &threadBlock);
+	scanf("%lu", &threadBlock);  
 	printf("Threads in block \n");
-	scanf("%d", &threads);
+	scanf("%lu", &threads); 
+
+	// stepNumber = 1000000; threadBlock = 10; threads = 10;
+
 	begin = clock();
 	threadNumber = threadBlock * threads;
 	threadSteps = stepNumber / threadNumber;

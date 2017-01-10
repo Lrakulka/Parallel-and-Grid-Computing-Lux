@@ -43,7 +43,7 @@ int main()
 	clock_t begin = clock();
 
 	printf("Type number of steps \n");
-	scanf("%d", &stepNumber);
+	scanf("%lu", &stepNumber);
 	// Allocate memory in GPU
 	cudaStatus = cudaMalloc(&d_result, sizeof(double));
 	if (cudaStatus != cudaSuccess) {

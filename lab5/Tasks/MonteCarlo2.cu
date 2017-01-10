@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 
 	if (myid == 0) {
 		printf("Type number of steps \n");
-		scanf("%d", &stepNumber);
+		scanf("%u", &stepNumber);
 		procStep = stepNumber / numprocs;
 	}
 	MPI_Bcast(&procStep, 1, MPI_INT, 0, MPI_COMM_WORLD);
