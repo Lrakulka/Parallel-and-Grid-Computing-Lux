@@ -1,5 +1,5 @@
 // FinalProject.cpp : Defines the entry point for the console application.
-//
+// g++ FinalProject.cpp -o FinalProject -pthread -std=gnu++0x -D_GLIBCXX_USE_NAN$
 
 #include <algorithm>
 #include <string>
@@ -66,8 +66,8 @@ void runTestOnThreads(double *time, unsigned long long* iteration, void(*loadFun
 
 void test(void(*loadFunction)(volatile long *, volatile long *), unsigned int, unsigned int, string);
 
-#define TIME_BETWEEN_TESTS 10s
-#define TIME_FOR_TESTS 20
+#define TIME_BETWEEN_TESTS 10
+#define TIME_FOR_TESTS 60
 
 volatile bool testStopFlag;
 thread* t;
@@ -75,11 +75,17 @@ double* threadsTime;
 unsigned long long* thredsIterations;
 std::ofstream file;
 
-int main()
-{
+int main(int argc, char* argv[]) {
+	int runTest;
+	if (argc < 2) {
+		runTest = -1;
+	}
+	else {
+		runTest = stoi(argv[1]);
+	}
 	//may return 0 when not able to detect
 	unsigned threadsNumb = std::thread::hardware_concurrency();
-	
+
 	if (!threadsNumb) {
 		cout << "Can not  detect number of threads" << endl;
 		return 3;
@@ -87,9 +93,10 @@ int main()
 
 	time_t tim = time(0);   // get time now
 	struct tm now;
-	localtime_s(&now, &tim);
-	file.open("testLog_" + std::to_string(now.tm_mday) + "^" 
-		+ std::to_string(now.tm_hour) +"^" + std::to_string(now.tm_min) + ".txt");
+	now = *localtime(&tim);
+	file.open("testLog_" + to_string(now.tm_mday) + "^"
+		+ to_string(now.tm_hour) + "^" + to_string(now.tm_min)
+		+ "-N" + to_string(runTest) + ".txt");
 	if (!file.is_open()) {
 		cout << "Can not  open file" << endl;
 		return 3;
@@ -99,27 +106,80 @@ int main()
 	thredsIterations = new unsigned long long[threadsNumb];
 
 	file << "Number of available threads " << threadsNumb << endl;
-	// Green operations
-	test(&loadAdd, TIME_FOR_TESTS, threadsNumb, "Addition");
-	test(&loadSub, TIME_FOR_TESTS, threadsNumb, "Subtraction");
-	test(&loadCom, TIME_FOR_TESTS, threadsNumb, "Comparesing");
-	// Orange operations
-	test(&loadDivis, TIME_FOR_TESTS, threadsNumb, "Division");
-	test(&loadMod, TIME_FOR_TESTS, threadsNumb, "Modulus");
-	// Red operations
-	test(&loadExp, TIME_FOR_TESTS, threadsNumb, "Exponenta");
-	test(&loadSQRT, TIME_FOR_TESTS, threadsNumb, "SQRT");
-	test(&loadSin, TIME_FOR_TESTS, threadsNumb, "Sinus");
-	test(&loadAsin, TIME_FOR_TESTS, threadsNumb, "Asin");
-	test(&loadPow, TIME_FOR_TESTS, threadsNumb, "Pow");
-	// Special tests
-	test(&loadMulBy2, TIME_FOR_TESTS, threadsNumb, "Multiplication by 2");
-	test(&loadShiftBy2, TIME_FOR_TESTS, threadsNumb, "Multiplication by 2 but shifting uses"); 
-	// Test drop behewior
-	test(&loadDrop, TIME_FOR_TESTS, threadsNumb, "Sudden drops");
-	// Why is it faster to process a sorted array than an unsorted array?
-	test(&loadNotSortedArray, TIME_FOR_TESTS, threadsNumb, "Not sorted Array");
-	test(&loadSortedArray, TIME_FOR_TESTS, threadsNumb, "Sorted Array");
+	switch (runTest)
+	{
+	case 1:
+		test(&loadAdd, TIME_FOR_TESTS, threadsNumb, "Addition");
+		break;
+	case 2:
+		test(&loadSub, TIME_FOR_TESTS, threadsNumb, "Subtraction");
+		break;
+	case 3:
+		test(&loadCom, TIME_FOR_TESTS, threadsNumb, "Comparesing");
+		break;
+	case 4:
+		test(&loadDivis, TIME_FOR_TESTS, threadsNumb, "Division");
+		break;
+	case 5:
+		test(&loadMod, TIME_FOR_TESTS, threadsNumb, "Modulus");
+		break;
+	case 6:
+		test(&loadExp, TIME_FOR_TESTS, threadsNumb, "Exponenta");
+		break;
+	case 7:
+		test(&loadSQRT, TIME_FOR_TESTS, threadsNumb, "SQRT");
+		break;
+	case 8:
+		test(&loadSin, TIME_FOR_TESTS, threadsNumb, "Sinus");
+		break;
+	case 9:
+		test(&loadAsin, TIME_FOR_TESTS, threadsNumb, "Asin");
+		break;
+	case 10:
+		test(&loadPow, TIME_FOR_TESTS, threadsNumb, "Pow");
+		break;
+	case 11:
+		// Special tests
+		test(&loadMulBy2, TIME_FOR_TESTS, threadsNumb, "Multiplication by 2");
+		break;
+	case 12:
+		test(&loadShiftBy2, TIME_FOR_TESTS, threadsNumb, "Multiplication by 2 but shifting uses");
+		break;
+	case 13:
+		// Test drop behewior
+		test(&loadDrop, TIME_FOR_TESTS, threadsNumb, "Sudden drops");
+		break;
+	case 14:
+		// Why is it faster to process a sorted array than an unsorted array?
+		test(&loadNotSortedArray, TIME_FOR_TESTS, threadsNumb, "Not sorted Array");
+		break;
+	case 15:
+		test(&loadSortedArray, TIME_FOR_TESTS, threadsNumb, "Sorted Array");
+		break;
+	default:
+		// Green operations
+		test(&loadAdd, TIME_FOR_TESTS, threadsNumb, "Addition");
+		test(&loadSub, TIME_FOR_TESTS, threadsNumb, "Subtraction");
+		test(&loadCom, TIME_FOR_TESTS, threadsNumb, "Comparesing");
+		// Orange operations
+		test(&loadDivis, TIME_FOR_TESTS, threadsNumb, "Division");
+		test(&loadMod, TIME_FOR_TESTS, threadsNumb, "Modulus");
+		// Red operations
+		test(&loadExp, TIME_FOR_TESTS, threadsNumb, "Exponenta");
+		test(&loadSQRT, TIME_FOR_TESTS, threadsNumb, "SQRT");
+		test(&loadSin, TIME_FOR_TESTS, threadsNumb, "Sinus");
+		test(&loadAsin, TIME_FOR_TESTS, threadsNumb, "Asin");
+		test(&loadPow, TIME_FOR_TESTS, threadsNumb, "Pow");
+		// Special tests
+		test(&loadMulBy2, TIME_FOR_TESTS, threadsNumb, "Multiplication by 2");
+		test(&loadShiftBy2, TIME_FOR_TESTS, threadsNumb, "Multiplication by 2 but shifting uses");
+		// Test drop behewior
+		test(&loadDrop, TIME_FOR_TESTS, threadsNumb, "Sudden drops");
+		// Why is it faster to process a sorted array than an unsorted array?
+		test(&loadNotSortedArray, TIME_FOR_TESTS, threadsNumb, "Not sorted Array");
+		test(&loadSortedArray, TIME_FOR_TESTS, threadsNumb, "Sorted Array");
+		break;
+	}
 
 	file.close();
 	delete[] t, threadsTime, thredsIterations;
@@ -132,7 +192,7 @@ void test(void(*loadFunction)(volatile long *, volatile long *), unsigned int te
 		// Constructs the new thread and runs it. Does not block execution.
 		t[i] = thread(runTestOnThreads, &threadsTime[i], &thredsIterations[i], loadFunction);
 	}
-	thread stopThread(stopThreads, &testStopFlag, 60);
+	thread stopThread(stopThreads, &testStopFlag, testTime);
 	runTestOnThreads(&threadsTime[threadsNumb - 1], &thredsIterations[threadsNumb - 1], loadFunction);
 	stopThread.join();
 	for (int i = 0; i < threadsNumb - 1; ++i) {
@@ -140,7 +200,7 @@ void test(void(*loadFunction)(volatile long *, volatile long *), unsigned int te
 	}
 	printThreadData(threadsNumb, threadsTime, thredsIterations, testName);
 	// Make distance of mesuremence
-	this_thread::sleep_for(TIME_BETWEEN_TESTS);
+	this_thread::sleep_for(chrono::seconds(TIME_BETWEEN_TESTS));
 }
 
 void printThreadData(unsigned threadsNumb, double* times, unsigned long long* iterations, string testName) {
@@ -249,20 +309,20 @@ void loadPow(volatile long *load, volatile long *param) {
 void loadDrop(volatile long *load, volatile long *param) {
 	(*load)++;
 	if (*load % 50000000 == 0) {
-		this_thread::sleep_for(4s);
+		this_thread::sleep_for(chrono::seconds(4));
 	}
 }
 /*
 No point in this test
 void loadSmoothDrop(volatile long *load, volatile long *param) {
-	(*load)++;
-	this_thread::sleep_for(std::chrono::milliseconds(abs(*param)));
-	if (*load % 100000 == 0) {
-		(*param)++;
-	}
-	if (*param == 4000) {
-		*param *= -1;
-	}
+(*load)++;
+this_thread::sleep_for(std::chrono::milliseconds(abs(*param)));
+if (*load % 100000 == 0) {
+(*param)++;
+}
+if (*param == 4000) {
+*param *= -1;
+}
 } */
 
 void loadSortedArray(volatile long *load, volatile long *param) {
