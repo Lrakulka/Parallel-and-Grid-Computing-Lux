@@ -3,7 +3,7 @@
 #OAR -t moonshot
 #OAR -l nodes=1,walltime=2
 
-export DIR_NAME="moonshotSingleNode"
+export DIR_NAME="moonshot"
 export NB_TESTS="15"
 
 module use $PROJECTWORK/project_pwrmon/soft/modules
@@ -25,7 +25,7 @@ likwid-powermeter ./FinalProject &>  ${HOSTNAME}_tests_ever_mesure.log
 wait $!
 rm -rf testLog_*
 
-likwid-perfctr -C S0 -g ENERGY -t 500ms ./MPI_FinalProject &>  ${HOSTNAME}_energ.log
+likwid-perfctr -C S0 -g ENERGY -t 500ms ./FinalProject &>  ${HOSTNAME}_energ.log
 wait $!
 for i in `seq 1 ${NB_TESTS}`; do
     likwid-powermeter ./FinalProject $i &>  ${HOSTNAME}_test_$i
