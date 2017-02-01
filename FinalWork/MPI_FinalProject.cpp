@@ -82,9 +82,14 @@ int main(int argc, char* argv[]) {
 	MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 	MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
 
-	if (myid == 0) {
+	/*if (myid == 0) {
 		printf("Type number test number \n");
 		scanf("%d", &runTest);
+	}*/
+	if (argc < 2) {
+		runTest = -1;
+	} else {
+		runTest = stoi(argv[1]);
 	}
 	MPI_Bcast(&runTest, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
