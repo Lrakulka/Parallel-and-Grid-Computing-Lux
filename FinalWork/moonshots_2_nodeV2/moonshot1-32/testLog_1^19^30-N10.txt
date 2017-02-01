@@ -1,0 +1,9 @@
+Number of available threads 4
+Test name is Pow
+Thread 	 Time 	 Iteration made 
+0 	 239.53 	 340360315
+1 	 239.53 	 339147930
+2 	 239.53 	 344654073
+3 	 239.53 	 335151687
+min 	 max 	 average 
+335151687 		 344654073 		 339828501

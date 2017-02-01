@@ -1,0 +1,9 @@
+Number of available threads 4
+Test name is Addition
+Thread 	 Time 	 Iteration made 
+0 	 239.54 	 1320210559
+1 	 239.54 	 1134244379
+2 	 239.54 	 1687029876
+3 	 239.54 	 1280444251
+min 	 max 	 average 
+1134244379 		 1687029876 		 1355482266

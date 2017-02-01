@@ -1,0 +1,37 @@
+#!/bin/bash -l
+#OAR -n energy
+#OAR -t moonshot
+#OAR -l nodes=1,walltime=2
+
+export DIR_NAME=${HOSTNAME}
+export NB_TESTS="15"
+
+module use $PROJECTWORK/project_pwrmon/soft/modules
+module load likwid
+
+mkdir ${DIR_NAME}
+
+g++ FinalProject.cpp -o FinalProject -pthread -std=gnu++0x -D_GLIBCXX_USE_NAN$
+
+cp FinalProject ./${DIR_NAME}/FinalProject
+
+cd $DIR_NAME
+
+likwid-powermeter -i &> CPU_info_host_${HOSTNAME}.log
+
+sort -u $OAR_NODEFILE >> host
+
+likwid-powermeter ./FinalProject &>  ${HOSTNAME}_tests_ever_mesure.log
+wait $!
+
+rm -rf testLog_*
+
+likwid-perfctr -C S0 -g ENERGY -t 500ms ./FinalProject &>  ${HOSTNAME}_energ.log
+wait $!
+
+for i in `seq 1 ${NB_TESTS}`; do
+    likwid-powermeter ./FinalProject $i &>  ${HOSTNAME}_test_$i
+    wait $!
+done
+
+rm FinalProject

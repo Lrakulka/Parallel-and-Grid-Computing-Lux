@@ -1,0 +1,121 @@
+Number of available threads 4
+Test name is Addition
+Thread 	 Time 	 Iteration made 
+0 	 59.83 	 4808660020
+1 	 59.85 	 4812423129
+2 	 59.86 	 4810221832
+3 	 59.86 	 4810291179
+min 	 max 	 average 
+4808660020 		 4812423129 		 4810399040
+Test name is Subtraction
+Thread 	 Time 	 Iteration made 
+0 	 59.83 	 4855012731
+1 	 59.84 	 4854739542
+2 	 59.85 	 4853586300
+3 	 59.87 	 4857505822
+min 	 max 	 average 
+4853586300 		 4857505822 		 4855211098
+Test name is Comparesing
+Thread 	 Time 	 Iteration made 
+0 	 59.84 	 5119341848
+1 	 59.85 	 5118768790
+2 	 59.86 	 5120846530
+3 	 59.88 	 5123479451
+min 	 max 	 average 
+5118768790 		 5123479451 		 5120609154
+Test name is Division
+Thread 	 Time 	 Iteration made 
+0 	 59.83 	 4492557177
+1 	 59.84 	 4494670684
+2 	 59.85 	 4492627949
+3 	 59.86 	 4495368262
+min 	 max 	 average 
+4492557177 		 4495368262 		 4493806018
+Test name is Modulus
+Thread 	 Time 	 Iteration made 
+0 	 59.84 	 3305445186
+1 	 59.85 	 3303669658
+2 	 59.86 	 3305589706
+3 	 59.88 	 3306399583
+min 	 max 	 average 
+3303669658 		 3306399583 		 3305276033
+Test name is Exponenta
+Thread 	 Time 	 Iteration made 
+0 	 59.83 	 637729927
+1 	 59.84 	 637917063
+2 	 59.86 	 638406635
+3 	 59.87 	 638580451
+min 	 max 	 average 
+637729927 		 638580451 		 638158519
+Test name is SQRT
+Thread 	 Time 	 Iteration made 
+0 	 59.83 	 1181726782
+1 	 59.84 	 1181703170
+2 	 59.85 	 1181383782
+3 	 59.87 	 1182844539
+min 	 max 	 average 
+1181383782 		 1182844539 		 1181914568
+Test name is Sinus
+Thread 	 Time 	 Iteration made 
+0 	 59.84 	 1509447626
+1 	 59.85 	 1508709216
+2 	 59.86 	 1508770841
+3 	 59.87 	 1510094229
+min 	 max 	 average 
+1508709216 		 1510094229 		 1509255478
+Test name is Asin
+Thread 	 Time 	 Iteration made 
+0 	 59.84 	 795972126
+1 	 59.86 	 796007328
+2 	 59.87 	 796396561
+3 	 59.88 	 796622282
+min 	 max 	 average 
+795972126 		 796622282 		 796249574
+Test name is Pow
+Thread 	 Time 	 Iteration made 
+0 	 59.84 	 186244259
+1 	 59.86 	 186362191
+2 	 59.86 	 186398820
+3 	 59.88 	 186771283
+min 	 max 	 average 
+186244259 		 186771283 		 186444138
+Test name is Multiplication by 2
+Thread 	 Time 	 Iteration made 
+0 	 59.83 	 4792476525
+1 	 59.84 	 4791892197
+2 	 59.85 	 4789232347
+3 	 59.86 	 4798516002
+min 	 max 	 average 
+4789232347 		 4798516002 		 4793029267
+Test name is Multiplication by 2 but shifting uses
+Thread 	 Time 	 Iteration made 
+0 	 59.84 	 5158720007
+1 	 59.85 	 5159753597
+2 	 59.86 	 5156991780
+3 	 59.88 	 5164201099
+min 	 max 	 average 
+5156991780 		 5164201099 		 5159916620
+Test name is Sudden drops
+Thread 	 Time 	 Iteration made 
+0 	 13.22 	 649999998
+1 	 13.23 	 649999998
+2 	 13.23 	 649999998
+3 	 13.25 	 699999998
+min 	 max 	 average 
+649999998 		 699999998 		 662499998
+Test name is Not sorted Array
+Thread 	 Time 	 Iteration made 
+0 	 83.25 	 1
+1 	 83.27 	 1
+2 	 83.33 	 1
+3 	 83.29 	 1
+min 	 max 	 average 
+1 		 1 		 1
+Test name is Sorted Array
+Thread 	 Time 	 Iteration made 
+0 	 60.44 	 2
+1 	 60.45 	 2
+2 	 60.45 	 2
+3 	 60.38 	 2
+min 	 max 	 average 
+2 		 2 		 2

@@ -1,0 +1,9 @@
+Number of available threads 4
+Test name is SQRT
+Thread 	 Time 	 Iteration made 
+0 	 239.45 	 572168272
+1 	 239.45 	 706523695
+2 	 239.45 	 794477299
+3 	 239.45 	 730759120
+min 	 max 	 average 
+572168272 		 794477299 		 700982096

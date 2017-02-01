@@ -1,0 +1,9 @@
+Number of available threads 4
+Test name is Multiplication by 2
+Thread 	 Time 	 Iteration made 
+0 	 239.52 	 1285468656
+1 	 239.52 	 1319932707
+2 	 239.52 	 1133849137
+3 	 239.53 	 1682933509
+min 	 max 	 average 
+1133849137 		 1682933509 		 1355546002

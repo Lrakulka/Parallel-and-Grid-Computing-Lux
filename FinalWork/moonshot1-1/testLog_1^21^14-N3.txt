@@ -1,0 +1,9 @@
+Number of available threads 4
+Test name is Comparesing
+Thread 	 Time 	 Iteration made 
+0 	 239.52 	 1482468140
+1 	 239.52 	 1408125785
+2 	 239.52 	 1279927173
+3 	 239.52 	 1786635237
+min 	 max 	 average 
+1279927173 		 1786635237 		 1489289083

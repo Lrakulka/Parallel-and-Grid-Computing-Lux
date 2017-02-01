@@ -1,0 +1,9 @@
+Number of available threads 4
+Test name is Division
+Thread 	 Time 	 Iteration made 
+0 	 239.51 	 1319563183
+1 	 239.51 	 1331168801
+2 	 239.51 	 1118357756
+3 	 239.51 	 1657685966
+min 	 max 	 average 
+1118357756 		 1657685966 		 1356693926

@@ -1,0 +1,9 @@
+Number of available threads 4
+Test name is Not sorted Array
+Thread 	 Time 	 Iteration made 
+0 	 305.82 	 3
+1 	 305.76 	 3
+2 	 305.75 	 3
+3 	 305.32 	 3
+min 	 max 	 average 
+3 		 3 		 3

@@ -1,0 +1,9 @@
+Number of available threads 4
+Test name is Sudden drops
+Thread 	 Time 	 Iteration made 
+0 	 37.53 	 649999998
+1 	 37.53 	 649999998
+2 	 37.53 	 667275176
+3 	 37.53 	 699999998
+min 	 max 	 average 
+649999998 		 699999998 		 666818792
