@@ -1,0 +1,21 @@
+--------------------------------------------------------------------------------
+CPU name:	Intel(R) Xeon(R) CPU E3-1284L v3 @ 1.80GHz
+CPU type:	Intel Core Haswell processor
+CPU clock:	1.80 GHz
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Runtime: 1072.32 s
+Measure for socket 0 on CPU 0
+Domain PKG:
+Energy consumed: 16706.6 Joules
+Power consumed: 15.5799 Watt
+Domain PP0:
+Energy consumed: 8126.41 Joules
+Power consumed: 7.57837 Watt
+Domain PP1:
+Energy consumed: 0.0283203 Joules
+Power consumed: 2.64104e-05 Watt
+Domain DRAM:
+Energy consumed: 2100.69 Joules
+Power consumed: 1.95902 Watt
+--------------------------------------------------------------------------------

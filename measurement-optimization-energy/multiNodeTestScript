@@ -1,0 +1,23 @@
+#!/bin/bash -l
+#OAR -n energy
+#OAR -t moonshot
+#OAR -l nodes=2,walltime=2
+
+export DIR_NAME="moonshots_2"
+export NB_TESTS="15"
+
+module load mpi/OpenMPI/1.6.4-GCC-4.7.2
+
+mkdir ${DIR_NAME}
+
+cp FinalProject.cpp ./${DIR_NAME}/FinalProject.cpp
+cp singleNodeTestScript ./${DIR_NAME}/singleNodeTestScript
+
+cd $DIR_NAME
+
+for host in $( sort -u $OAR_NODEFILE ); do echo "$host slots=1"; done >> hosts
+
+mpirun -hostfile hosts singleNodeTestScript
+
+rm FinalProject.cpp
+rm singleNodeTestScript

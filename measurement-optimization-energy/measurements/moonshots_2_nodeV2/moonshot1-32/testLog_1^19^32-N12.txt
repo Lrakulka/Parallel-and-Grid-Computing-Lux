@@ -1,0 +1,9 @@
+Number of available threads 4
+Test name is Multiplication by 2 but shifting uses
+Thread 	 Time 	 Iteration made 
+0 	 239.53 	 2191540086
+1 	 239.53 	 1118602406
+2 	 239.53 	 1433783003
+3 	 239.53 	 1554214613
+min 	 max 	 average 
+1118602406 		 2191540086 		 1574535027

@@ -1,0 +1,29 @@
+--------------------------------------------------------------------------------
+CPU name:	Intel(R) Xeon(R) CPU E5-2680 v3 @ 2.50GHz
+CPU type:	Intel Xeon Haswell EN/EP/EX processor
+CPU clock:	2.50 GHz
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Runtime: 70.0186 s
+Measure for socket 0 on CPU 0
+Domain PKG:
+Energy consumed: 5651.14 Joules
+Power consumed: 80.7092 Watt
+Domain PP0:
+Energy consumed: 0 Joules
+Power consumed: 0 Watt
+Domain DRAM:
+Energy consumed: 1207.68 Joules
+Power consumed: 17.2481 Watt
+
+Measure for socket 1 on CPU 1
+Domain PKG:
+Energy consumed: 5415.04 Joules
+Power consumed: 77.3372 Watt
+Domain PP0:
+Energy consumed: 0 Joules
+Power consumed: 0 Watt
+Domain DRAM:
+Energy consumed: 1113.41 Joules
+Power consumed: 15.9017 Watt
+--------------------------------------------------------------------------------

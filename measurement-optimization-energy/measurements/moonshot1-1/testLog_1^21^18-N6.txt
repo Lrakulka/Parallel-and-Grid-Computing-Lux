@@ -1,0 +1,9 @@
+Number of available threads 4
+Test name is Exponenta
+Thread 	 Time 	 Iteration made 
+0 	 239.57 	 582372226
+1 	 239.57 	 464133203
+2 	 239.57 	 551286413
+3 	 239.57 	 717776066
+min 	 max 	 average 
+464133203 		 717776066 		 578891977

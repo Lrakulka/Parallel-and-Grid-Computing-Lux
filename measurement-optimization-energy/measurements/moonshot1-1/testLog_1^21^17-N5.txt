@@ -1,0 +1,9 @@
+Number of available threads 4
+Test name is Modulus
+Thread 	 Time 	 Iteration made 
+0 	 239.51 	 1765718959
+1 	 239.51 	 1452238550
+2 	 239.51 	 1124918386
+3 	 239.51 	 1245038074
+min 	 max 	 average 
+1124918386 		 1765718959 		 1396978492

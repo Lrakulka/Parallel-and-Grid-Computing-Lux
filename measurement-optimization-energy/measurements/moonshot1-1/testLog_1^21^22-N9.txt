@@ -1,0 +1,9 @@
+Number of available threads 4
+Test name is Asin
+Thread 	 Time 	 Iteration made 
+0 	 239.54 	 546343745
+1 	 239.54 	 636229883
+2 	 239.54 	 578131299
+3 	 239.54 	 504792947
+min 	 max 	 average 
+504792947 		 636229883 		 566374468

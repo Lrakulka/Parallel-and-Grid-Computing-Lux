@@ -1,0 +1,9 @@
+Number of available threads 4
+Test name is Sinus
+Thread 	 Time 	 Iteration made 
+0 	 239.5 	 401352931
+1 	 239.5 	 649352298
+2 	 239.5 	 611490018
+3 	 239.5 	 557791482
+min 	 max 	 average 
+401352931 		 649352298 		 554996682

@@ -1,0 +1,9 @@
+Number of available threads 4
+Test name is Subtraction
+Thread 	 Time 	 Iteration made 
+0 	 239.53 	 1400494775
+1 	 239.53 	 1063934762
+2 	 239.53 	 1337266377
+3 	 239.53 	 1916994713
+min 	 max 	 average 
+1063934762 		 1916994713 		 1429672656

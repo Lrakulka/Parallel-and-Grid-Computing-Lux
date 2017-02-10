@@ -1,0 +1,183 @@
+--------------------------------------------------------------------------------
+CPU name:	Intel(R) Xeon(R) CPU E5-4650 v2 @ 2.40GHz
+CPU type:	Intel Xeon IvyBridge EN/EP/EX processor
+CPU clock:	2.40 GHz
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+Runtime: 30.1293 s
+Measure for socket 0 on CPU 0
+Domain PKG:
+Energy consumed: 956.024 Joules
+Power consumed: 31.7307 Watt
+Domain PP0:
+Energy consumed: 644.713 Joules
+Power consumed: 21.3982 Watt
+Domain DRAM:
+Energy consumed: 910.708 Joules
+Power consumed: 30.2266 Watt
+
+Measure for socket 1 on CPU 10
+Domain PKG:
+Energy consumed: 1041.26 Joules
+Power consumed: 34.5597 Watt
+Domain PP0:
+Energy consumed: 729.492 Joules
+Power consumed: 24.212 Watt
+Domain DRAM:
+Energy consumed: 874.929 Joules
+Power consumed: 29.0391 Watt
+
+Measure for socket 2 on CPU 20
+Domain PKG:
+Energy consumed: 1174.46 Joules
+Power consumed: 38.9807 Watt
+Domain PP0:
+Energy consumed: 857.409 Joules
+Power consumed: 28.4576 Watt
+Domain DRAM:
+Energy consumed: 892.42 Joules
+Power consumed: 29.6196 Watt
+
+Measure for socket 3 on CPU 30
+Domain PKG:
+Energy consumed: 998.33 Joules
+Power consumed: 33.1348 Watt
+Domain PP0:
+Energy consumed: 686.808 Joules
+Power consumed: 22.7953 Watt
+Domain DRAM:
+Energy consumed: 858.279 Joules
+Power consumed: 28.4865 Watt
+
+Measure for socket 4 on CPU 40
+Domain PKG:
+Energy consumed: 1008.38 Joules
+Power consumed: 33.4685 Watt
+Domain PP0:
+Energy consumed: 698.645 Joules
+Power consumed: 23.1882 Watt
+Domain DRAM:
+Energy consumed: 906.773 Joules
+Power consumed: 30.096 Watt
+
+Measure for socket 5 on CPU 50
+Domain PKG:
+Energy consumed: 987.548 Joules
+Power consumed: 32.777 Watt
+Domain PP0:
+Energy consumed: 678.728 Joules
+Power consumed: 22.5272 Watt
+Domain DRAM:
+Energy consumed: 873.187 Joules
+Power consumed: 28.9813 Watt
+
+Measure for socket 6 on CPU 60
+Domain PKG:
+Energy consumed: 1183.08 Joules
+Power consumed: 39.2669 Watt
+Domain PP0:
+Energy consumed: 867.739 Joules
+Power consumed: 28.8005 Watt
+Domain DRAM:
+Energy consumed: 898.029 Joules
+Power consumed: 29.8058 Watt
+
+Measure for socket 7 on CPU 70
+Domain PKG:
+Energy consumed: 1237.89 Joules
+Power consumed: 41.0857 Watt
+Domain PP0:
+Energy consumed: 922.863 Joules
+Power consumed: 30.6301 Watt
+Domain DRAM:
+Energy consumed: 809.889 Joules
+Power consumed: 26.8804 Watt
+
+Measure for socket 8 on CPU 80
+Domain PKG:
+Energy consumed: 1155.94 Joules
+Power consumed: 38.366 Watt
+Domain PP0:
+Energy consumed: 842.454 Joules
+Power consumed: 27.9613 Watt
+Domain DRAM:
+Energy consumed: 909.935 Joules
+Power consumed: 30.201 Watt
+
+Measure for socket 9 on CPU 90
+Domain PKG:
+Energy consumed: 1148.77 Joules
+Power consumed: 38.1279 Watt
+Domain PP0:
+Energy consumed: 833.541 Joules
+Power consumed: 27.6654 Watt
+Domain DRAM:
+Energy consumed: 825.838 Joules
+Power consumed: 27.4098 Watt
+
+Measure for socket 10 on CPU 100
+Domain PKG:
+Energy consumed: 1025.61 Joules
+Power consumed: 34.0401 Watt
+Domain PP0:
+Energy consumed: 700.777 Joules
+Power consumed: 23.259 Watt
+Domain DRAM:
+Energy consumed: 1009.39 Joules
+Power consumed: 33.502 Watt
+
+Measure for socket 11 on CPU 110
+Domain PKG:
+Energy consumed: 1190.04 Joules
+Power consumed: 39.4978 Watt
+Domain PP0:
+Energy consumed: 871.415 Joules
+Power consumed: 28.9225 Watt
+Domain DRAM:
+Energy consumed: 857.053 Joules
+Power consumed: 28.4458 Watt
+
+Measure for socket 12 on CPU 120
+Domain PKG:
+Energy consumed: 1129.07 Joules
+Power consumed: 37.4742 Watt
+Domain PP0:
+Energy consumed: 815.202 Joules
+Power consumed: 27.0567 Watt
+Domain DRAM:
+Energy consumed: 875.464 Joules
+Power consumed: 29.0569 Watt
+
+Measure for socket 13 on CPU 130
+Domain PKG:
+Energy consumed: 1083.23 Joules
+Power consumed: 35.9526 Watt
+Domain PP0:
+Energy consumed: 769.135 Joules
+Power consumed: 25.5278 Watt
+Domain DRAM:
+Energy consumed: 818.385 Joules
+Power consumed: 27.1624 Watt
+
+Measure for socket 14 on CPU 140
+Domain PKG:
+Energy consumed: 1115.86 Joules
+Power consumed: 37.0358 Watt
+Domain PP0:
+Energy consumed: 803.918 Joules
+Power consumed: 26.6822 Watt
+Domain DRAM:
+Energy consumed: 966.719 Joules
+Power consumed: 32.0857 Watt
+
+Measure for socket 15 on CPU 150
+Domain PKG:
+Energy consumed: 1054.37 Joules
+Power consumed: 34.9949 Watt
+Domain PP0:
+Energy consumed: 742.792 Joules
+Power consumed: 24.6535 Watt
+Domain DRAM:
+Energy consumed: 859.996 Joules
+Power consumed: 28.5435 Watt
+--------------------------------------------------------------------------------
